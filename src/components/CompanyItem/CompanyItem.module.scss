@@ -1,0 +1,11 @@
+.component {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+	padding: 10px;
+
+	&:nth-child(2n + 1) {
+		background-color: rgba(128, 128, 128, 0.143);
+	}
+}
