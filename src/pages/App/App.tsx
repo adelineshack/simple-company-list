@@ -2,7 +2,7 @@ import { AddCompanyForm } from 'components/AddCompanyForm/AddCompanyForm';
 import { CompanyItem } from 'components/CompanyItem/CompanyItem';
 import { SearchCompanyForm } from 'components/SearchCompanyForm/SearchCompanyForm';
 import { SortIcon } from 'icons';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Company } from 'types';
 import { searchByName, sortByName } from 'utils';
 
@@ -61,6 +61,16 @@ function App() {
 		});
 	}, []);
 
+	const filteredCompanies = useMemo(
+		() =>
+			companies?.filter((company) => {
+				if (searchQuery) {
+					return fiterQuery.includes(company.id);
+				} else return true;
+			}),
+		[companies, searchQuery, fiterQuery],
+	);
+
 	return (
 		<div className={style.app}>
 			<div className={style.container}>
@@ -80,19 +90,17 @@ function App() {
 							<SortIcon />
 						</button>
 					</section>
-					{companies
-						?.filter((company) => {
-							if (searchQuery) {
-								return fiterQuery.includes(company.id);
-							} else return true;
-						})
-						?.map((company) => (
+					{filteredCompanies?.length === 0 ? (
+						<span>Nothing found</span>
+					) : (
+						filteredCompanies?.map((company) => (
 							<CompanyItem
 								key={company.id}
 								onClick={() => deleteCompany(company.id)}
 								company={company}
 							/>
-						))}
+						))
+					)}
 				</section>
 			</div>
 		</div>
